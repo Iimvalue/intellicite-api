@@ -4,6 +4,7 @@ import {
   findUserById,
   createUser,
   validateUserCredentials,
+  getAllUsers
 } from '../services/users.services';
 import { generateToken } from '../utils/generateToken';
 import { AuthRequest } from '../middlewares/auth.middleware';
@@ -37,12 +38,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
       success: true,
       message: 'User registered successfully',
       data: {
-        user: {
-          id: newUser._id,
-          name: newUser.name,
-          email: newUser.email,
-          searchHistory: newUser.searchHistory,
-        },
+        user: newUser.userData,
         token,
       },
     });
@@ -82,12 +78,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
       success: true,
       message: 'Login successful',
       data: {
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          searchHistory: user.searchHistory,
-        },
+        user: user.userData,
         token,
       },
     });
@@ -125,12 +116,7 @@ export const getUserProfile = async (req: AuthRequest, res: Response): Promise<v
       success: true,
       message: 'User profile retrieved successfully',
       data: {
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          searchHistory: user.searchHistory,
-        },
+        user: user.userData,
       },
     });
   } catch (error) {
@@ -173,12 +159,7 @@ export const updateUserProfile = async (req: AuthRequest, res: Response): Promis
       success: true,
       message: 'User profile updated successfully',
       data: {
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          searchHistory: user.searchHistory,
-        },
+        user: user.userData,
       },
     });
   } catch (error) {
@@ -190,3 +171,22 @@ export const updateUserProfile = async (req: AuthRequest, res: Response): Promis
   }
 };
 
+export const getUsers = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const users = await getAllUsers(); 
+
+    res.status(200).json({
+      success: true,
+      message: 'Users retrieved successfully',
+      data: {
+        users: users.map(user => user.userData),
+      },
+    });
+  } catch (error) {
+    console.error('Get users error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+    });
+  }
+};
