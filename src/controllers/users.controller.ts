@@ -5,7 +5,7 @@ import {
   createUser,
   validateUserCredentials,
   getAllUsers
-} from '../services/users.services';
+} from '../services/users.service';
 import { generateToken } from '../utils/generateToken';
 import { AuthRequest } from '../middlewares/auth.middleware';
 
