@@ -34,3 +34,7 @@ export const validateUserCredentials = async (
   const isMatch = await user.comparePassword(inputPassword);
   return isMatch ? user : null;
 };
+
+export const getAllUsers = async (): Promise<IUser[]> => {
+  return await UserCollection.find({});
+}
