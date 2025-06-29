@@ -7,7 +7,7 @@ interface IPaper extends Document {
   authors: string[];
   publicationDate: Date;
   journal: string;
-  summary: string; 
+  report: string; 
   citationCount: number;
   badges: string[]; 
   pdfLink: string;
@@ -35,7 +35,7 @@ const paperSchema = new Schema<IPaper>({
     type: String,
     required: true
   },
-  summary: {
+  report: {
     type: String,
     required: true
   },
