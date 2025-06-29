@@ -17,7 +17,8 @@ export async function searchSemanticScholar(query: string, limit = 3) {
       params: {
         query,
         limit,
-        fields: 'title,authors,year,venue,abstract,url,citationCount,externalIds',
+        fields:
+          'title,authors,year,venue,abstract,url,citationCount,externalIds',
       },
     });
 
@@ -100,4 +101,21 @@ export async function enrichPaper(doi: string) {
   ]);
 
   return { unpaywall: uw, crossref: cr, openalex: oa };
+}
+
+// a func to check a citation by doi, it returns details for the paper from four APIs
+export async function checkCitation(doi: string) {
+  const [uw, cr, oa, ss] = await Promise.all([
+    getFromUnpaywall(doi),
+    getFromCrossref(doi),
+    getFromOpenAlex(doi),
+    getFromSemanticScholar(doi),
+  ]);
+
+  return {
+    unpaywall: uw,
+    crossref: cr,
+    openalex: oa,
+    semanticScholar: ss,
+  };
 }
