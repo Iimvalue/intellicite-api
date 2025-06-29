@@ -4,6 +4,8 @@ package-lock.json
 npm-shrinkwrap.json
 *.log
 *.gz
+.yarn-debug.log*
+.env
 
 # Coveralls
 .nyc_output
