@@ -2,7 +2,7 @@ import mongoose, { Document, Schema, Types } from 'mongoose';
 
 interface IPaper extends Document {
   _id: Types.ObjectId;
-  doi?: string; 
+  doi?: string;
   title: string;
   authors: string[];
   publicationDate: Date;
@@ -12,7 +12,10 @@ interface IPaper extends Document {
   badges: string[]; 
   pdfLink: string;
   sourceLink: string;
+  isOpenAccess?: boolean;
+  isPreprint?: boolean;
 }
+
 
 const paperSchema = new Schema<IPaper>({
   doi: {
@@ -54,8 +57,17 @@ const paperSchema = new Schema<IPaper>({
   sourceLink: {
     type: String,
     required: true
-  }
- 
+  },
+
+  isOpenAccess: {
+    type: Boolean,
+    default: false
+  },
+  isPreprint: {
+    type: Boolean,
+    default: false
+  },
+
 }, { timestamps: true } );
 
 export const Paper = mongoose.model<IPaper>('Paper', paperSchema);
