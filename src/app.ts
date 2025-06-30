@@ -6,6 +6,7 @@ import { connectDB } from "./config/database";
 import userRoutes from "./routes/users.routes";
 import savedPaperRoutes from "./routes/savedPaper.routes";
 import paperRoutes from "./routes/papers.routes";
+import userHistoryRoutes from './routes/userHistory.routes';
 
 dotenv.config();
 const port = process.env.PORT || 3000;
@@ -24,6 +25,7 @@ app.use(express.static("public"));
 app.use("/api/users", userRoutes);
 app.use("/api/saved-papers", savedPaperRoutes);
 app.use("/api/papers", paperRoutes);
+app.use('/api/user-history', userHistoryRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.json({
