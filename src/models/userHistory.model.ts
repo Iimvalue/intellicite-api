@@ -2,7 +2,7 @@ import mongoose, { Schema, Document, Types } from 'mongoose';
 
 export interface IUserHistory extends Document {
   userId: Types.ObjectId;
-  query: string;
+  query: string; // The search query comes from the user , from the frontend.
   searchedAt: Date;
   retrievedPaperIds: Types.ObjectId[]; // Talal you can use mock data to test this , until I finish the paper retrieval feature. don't create a paper logic yet.
 }
