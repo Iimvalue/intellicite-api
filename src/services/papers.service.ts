@@ -3,10 +3,10 @@ import { PaperReport } from '../models/PaperReport.model';
 import {
   searchSemanticScholar,
   enrichPaper,
-} from '../services/search-openAI/externalApis.service';
+} from './search-openAI/externalApis.service';
 import { generateBadges } from '../utils/badge.helper';
 import { formatToPaperModel } from '../utils/formatToPaperModel';
-import { generateReport } from '../services/search-openAI/openAiAssistant.service';
+import { generateReport } from './search-openAI/openAiAssistant.service';
 
 export async function getPapersWithReports(query: string, userId: string) {
   

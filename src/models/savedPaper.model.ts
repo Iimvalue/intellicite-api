@@ -1,3 +1,4 @@
+
 import mongoose, { Document, Schema, Types } from 'mongoose';
 
 interface ISavedPaper extends Document {
@@ -9,24 +10,10 @@ interface ISavedPaper extends Document {
 }
 
 const savedPaperSchema = new Schema<ISavedPaper>({
-  userId: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  paperId: {
-    type: Schema.Types.ObjectId,
-    ref: 'Paper',
-    required: true
-  },
-  savedAt: {
-    type: Date,
-    default: Date.now
-  },
-  personalNotes: {
-    type: String,
-    default: ''
-  }
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  paperId: { type: Schema.Types.ObjectId, ref: 'Paper', required: true },
+  savedAt: { type: Date, default: Date.now },
+  personalNotes: { type: String, default: '' }
 });
 
 savedPaperSchema.index({ userId: 1, paperId: 1 }, { unique: true });
