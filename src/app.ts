@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import dotenv from 'dotenv';
 import { connectDB } from './config/database';
 import userRoutes from './routes/users.routes';
+import paperRoutes from './routes/paper.routes';
 
 dotenv.config();
 const port = process.env.PORT || 3000;
@@ -21,6 +22,7 @@ app.use(express.static('public'));
 
 // Routes
 app.use('/api/users', userRoutes);
+app.use('/api', paperRoutes);
 
 app.get('/', (req: Request, res: Response) => {
   res.json({ 

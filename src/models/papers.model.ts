@@ -19,27 +19,23 @@ export interface IPaper extends Document {
 const paperSchema = new Schema<IPaper>({
   doi: {
     type: String,
-    required: false
+    required: true,
   },
   title: {
     type: String,
-    required: true
   },
   authors: [{
     type: String,
-    required: true
   }],
   publicationDate: {
     type: Date,
-    required: true
   },
   journal: {
     type: String,
-    required: true
   }, 
   citationCount: {
     type: Number,
-    required: true,
+    required: false,
     default: 0
   },
   badges: [{
@@ -47,11 +43,9 @@ const paperSchema = new Schema<IPaper>({
   }],
   pdfLink: {
     type: String,
-    required: true
   },
   sourceLink: {
     type: String,
-    required: true
   },
 
   isOpenAccess: {
