@@ -9,7 +9,6 @@ import { formatToPaperModel } from '../utils/formatToPaperModel';
 import { generateReport } from '../services/search-openAI/openAiAssistant.service';
 
 export async function getPapersWithReports(query: string, userId: string) {
-  
   const results = await searchSemanticScholar(query, 3);
 
   if (results.length === 0) {
@@ -29,26 +28,36 @@ export async function getPapersWithReports(query: string, userId: string) {
         console.warn(`no metadata found for this paper: ${doi}`);
         continue;
       }
-
+      console.log(`meta:` + JSON.stringify(meta, null, 2));
       // construct the metadata needed to generate badges
+      const citationCount = meta.openalex?.cited_by_count ?? 0;
+
+      const publicationDate = (() => {
+        const cr = meta.crossref;
+        const pubParts =
+          cr?.published?.['date-parts']?.[0] ||
+          cr?.created?.['date-parts']?.[0];
+        return pubParts ? new Date(pubParts.join('-')) : new Date();
+      })();
+
+      const isOpenAccess = meta.unpaywall?.is_oa ?? false;
+
+      const isPreprint =
+        meta.crossref?.type === 'posted-content' ||
+        meta.openalex?.type === 'posted_content';
+
+      const journal =
+        meta.crossref?.['container-title']?.[0] ??
+        meta.crossref?.containerTitle?.[0] ??
+        meta.openalex?.host_venue?.display_name ??
+        'Unknown';
+
       const badgeData = {
-        citationCount: meta.openalex?.cited_by_count ?? 0,
-        publicationDate: (() => {
-          const cr = meta.crossref;
-          const pubParts =
-            cr?.published?.['date-parts']?.[0] ||
-            cr?.created?.['date-parts']?.[0];
-          return pubParts ? new Date(pubParts.join('-')) : new Date();
-        })(),
-        isOpenAccess: meta.unpaywall?.is_oa ?? false,
-        isPreprint:
-          meta.crossref?.type === 'posted-content' ||
-          meta.openalex?.type === 'posted_content',
-        journal:
-          meta.crossref?.['container-title']?.[0] ??
-          meta.crossref?.containerTitle?.[0] ??
-          meta.openalex?.host_venue?.display_name ??
-          'Unknown',
+        citationCount,
+        publicationDate,
+        isOpenAccess,
+        isPreprint,
+        journal,
       };
 
       // pass the metadata needed to generate badges
