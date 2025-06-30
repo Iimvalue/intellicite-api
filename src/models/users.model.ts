@@ -14,6 +14,12 @@ interface IUser extends Document {
   password: string;
   searchHistory: ISearchHistory[];
   comparePassword: (input: string) => Promise<boolean>;
+  userData: {
+    id: Types.ObjectId;
+    name: string;
+    email: string;
+    searchHistory: ISearchHistory[];
+  };
 }
 
 const searchHistorySchema = new Schema<ISearchHistory>({
@@ -58,6 +64,18 @@ userSchema.pre<IUser>('save', async function (next) {
 userSchema.methods.comparePassword = async function (input: string): Promise<boolean> {
   return await bcrypt.compare(input, this.password);
 };
+
+userSchema.virtual('userData').get(function() {
+  return {
+    id: this._id,
+    name: this.name,
+    email: this.email,
+    searchHistory: this.searchHistory,
+  };
+});
+
+userSchema.set('toJSON', { virtuals: true });
+userSchema.set('toObject', { virtuals: true });
 
 export const UserCollection = mongoose.model<IUser>('User', userSchema);
 export type { IUser, ISearchHistory };

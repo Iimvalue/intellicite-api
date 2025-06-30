@@ -1,9 +1,6 @@
 import { IUser } from '../models/users.model';
 import { UserCollection } from '../models/users.model';
 
-
-
-
 export const findUserByEmail = async (email: string): Promise<IUser | null> => {
   return await UserCollection.findOne({ email });
 };
@@ -34,3 +31,7 @@ export const validateUserCredentials = async (
   const isMatch = await user.comparePassword(inputPassword);
   return isMatch ? user : null;
 };
+
+export const getAllUsers = async (): Promise<IUser[]> => {
+  return await UserCollection.find({});
+}
