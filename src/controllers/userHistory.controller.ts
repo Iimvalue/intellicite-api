@@ -49,6 +49,30 @@ export const addUserSearchHistory = async (
     res.status(201).json(newHistory);
   } catch (error) {
     console.error("Error saving search history:", error);
+    res.status(500).json({  message: "Internal server error" });
+  }
+};
+export const deleteSingleSearchHistory = async (
+  req: AuthRequest,
+  res: Response
+): Promise<void> => {
+  try {
+    const userId = req.user?.id;
+    const { historyId } = req.params;
+
+    const deleted = await UserHistory.findOneAndDelete({
+      _id: historyId,
+      userId,
+    });
+
+    if (!deleted) {
+      res.status(404).json({ message: "History entry not found" });
+      return;
+    }
+
+    res.status(200).json({success: true, message: "History entry deleted" });
+  } catch (error) {
+    console.error("Error deleting search history:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
