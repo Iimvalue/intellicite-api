@@ -1,6 +1,4 @@
-
-
-
+// functions to give each paper a badge that describes its status, used to enrich the paper metadata.
 
 function getCitationBadge(citationCount: number, pubYear: number, nowYear: number): string | null {
   if (citationCount >= 100) return 'Highly Cited';

@@ -1,13 +1,12 @@
 import mongoose, { Document, Schema, Types } from 'mongoose';
 
-interface IPaper extends Document {
+export interface IPaper extends Document {
   _id: Types.ObjectId;
   doi?: string;
   title: string;
   authors: string[];
   publicationDate: Date;
   journal: string;
-  report: string; 
   citationCount: number;
   badges: string[]; 
   pdfLink: string;
@@ -37,11 +36,7 @@ const paperSchema = new Schema<IPaper>({
   journal: {
     type: String,
     required: true
-  },
-  report: {
-    type: String,
-    required: true
-  },
+  }, 
   citationCount: {
     type: Number,
     required: true,
@@ -71,4 +66,3 @@ const paperSchema = new Schema<IPaper>({
 }, { timestamps: true } );
 
 export const Paper = mongoose.model<IPaper>('Paper', paperSchema);
-export type { IPaper };
