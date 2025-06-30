@@ -1073,6 +1073,35 @@
 			]
 		},
 		{
+			"name": "CiteCheck",
+			"item": [
+				{
+					"name": "Add citeCheck",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Get citeCheck",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Get citeCheck by id",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Health Check",
 			"event": [
 				{
