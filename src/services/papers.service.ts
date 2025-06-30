@@ -28,7 +28,6 @@ export async function getPapersWithReports(query: string, userId: string) {
         console.warn(`no metadata found for this paper: ${doi}`);
         continue;
       }
-      console.log(`meta:` + JSON.stringify(meta, null, 2));
       // construct the metadata needed to generate badges
       const citationCount = meta.openalex?.cited_by_count ?? 0;
 
