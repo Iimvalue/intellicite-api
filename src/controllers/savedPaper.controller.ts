@@ -10,6 +10,7 @@ import {
 export const addSavedPaper = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const userId = req.user?.id;
+
     const { paperId, personalNotes } = req.body;
 
     if (!userId) {
@@ -38,6 +39,7 @@ export const addSavedPaper = async (req: AuthRequest, res: Response): Promise<vo
 export const deleteSavedPaper = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const userId = req.user?.id;
+
     const { paperId } = req.params;
 
     if (!userId) {
@@ -67,6 +69,7 @@ export const getSavedPapers = async (req: AuthRequest, res: Response): Promise<v
   try {
     const userId = req.user?.id;
 
+
     if (!userId) {
       res.status(401).json({ success: false, message: 'User not authenticated' });
       return;
@@ -88,6 +91,7 @@ export const getSavedPapers = async (req: AuthRequest, res: Response): Promise<v
 export const updateSavedPaperNotes = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const userId = req.user?.id;
+
     const { paperId } = req.params;
     const { personalNotes } = req.body;
 
