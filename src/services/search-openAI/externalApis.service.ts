@@ -10,24 +10,60 @@ if (!user_email) {
 // return search results from semantic  - limited to 3 results
 // https://api.semanticscholar.org/graph/v1/paper/search?query=<example> (<<) an example query
 
-export async function searchSemanticScholar(query: string, limit = 3) {
-  try {
-    const url = `https://api.semanticscholar.org/graph/v1/paper/search`;
-    const response = await axios.get(url, {
-      params: {
-        query,
-        limit,
-        fields:
-          'title,authors,year,venue,abstract,url,citationCount,externalIds',
-      },
-    });
+export async function searchSemanticScholar(query: string, count: number = 3) {
+  const doiPapers: any[] = [];
+  let offset = 0;
+  const pageSize = 10;
+  const maxPages = 5;
+  let pagesTried = 0;
 
-    return Array.isArray(response.data.data) ? response.data.data : [];
-  } catch (error: any) {
-    console.warn('Semantic Scholar Search error:', error.message);
-    return [];
+  const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  while (doiPapers.length < count && pagesTried < maxPages) {
+    try {
+      // console.log(`fetching papers...found=${doiPapers.length}`);
+
+      const response = await axios.get(`https://api.semanticscholar.org/graph/v1/paper/search`, {
+        params: {
+          query,
+          limit: pageSize,
+          offset,
+          fields:
+            'title,authors,year,venue,abstract,url,citationCount,externalIds',
+        },
+      });
+
+      const papers = Array.isArray(response.data.data) ? response.data.data : [];
+
+      if (papers.length === 0) {
+        console.warn('no more results from Semantic Scholar.');
+        break;
+      }
+
+      const valid = papers.filter((p: any) => p.externalIds?.DOI);
+      console.log(`page ${pagesTried + 1}: ${papers.length} total, ${valid.length} with DOIs`);
+
+      doiPapers.push(...valid);
+      offset += pageSize;
+      pagesTried++;
+
+      await delay(2000); 
+    } catch (error: any) {
+      if (error.response?.status === 429) {
+        // console.warn('rate limit hit (429). Retrying after 2 seconds...');
+        await delay(2000);
+        continue; 
+      }
+
+      console.warn('Semantic Scholar Search error:', error.message);
+      break;
+    }
   }
+
+  // console.log(`total valid papers with DOI: ${doiPapers.length}`);
+  return doiPapers.slice(0, count);
 }
+
 
 // return a single paper from Semantic by doi - used in the check citation feature
 // https://api.semanticscholar.org/graph/v1/paper/DOI:<doi> (<<) an example get request
