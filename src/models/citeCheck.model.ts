@@ -1,32 +1,21 @@
-// import mongoose, { Document, Schema, Types } from 'mongoose';
+import mongoose, { Document, Schema, Types } from 'mongoose';
 
-// interface ICiteCheck extends Document {
-//   _id: Types.ObjectId;
-//   userId: Types.ObjectId;
-//   inputText: string; 
-//   result: string; 
-//   checkedAt: Date;
-// }
+export interface ICiteCheck extends Document {
+  userId: Types.ObjectId;
+  query: string;
+  paperId: Types.ObjectId;
+  score: number; // 0-100
+  aiSummary: string;
+  checkedAt: Date;
+}
 
-// const citeCheckSchema = new Schema<ICiteCheck>({
-//   userId: {
-//     type: Schema.Types.ObjectId,
-//     ref: 'User',
-//     required: true
-//   },
-//   inputText: {
-//     type: String,
-//     required: true
-//   },
-//   result: {
-//     type: String,
-//     required: true
-//   },
-//   checkedAt: {
-//     type: Date,
-//     default: Date.now
-//   }
-// });
+const citeCheckSchema = new Schema<ICiteCheck>({
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  query: { type: String, required: true },
+  paperId: { type: Schema.Types.ObjectId, ref: 'Paper', required: true },
+  score: { type: Number, required: true }, // Ex: 85%
+  aiSummary: { type: String, required: true }, // What the AI said about the match
+  checkedAt: { type: Date, default: Date.now }
+});
 
-// export const CiteCheck = mongoose.model<ICiteCheck>('CiteCheckCollection', citeCheckSchema);
-// export type { ICiteCheck };
+export const CiteCheck = mongoose.model<ICiteCheck>('CiteCheck', citeCheckSchema);
