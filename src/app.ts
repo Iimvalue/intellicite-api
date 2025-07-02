@@ -23,7 +23,7 @@ app.use(express.static("public"));
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/saved-papers", savedPaperRoutes);
-app.use("/api", paperRoutes);
+app.use("/api/papers", paperRoutes);
 app.use("/api/user-history", userHistoryRoutes);
 
 app.get("/", (req: Request, res: Response) => {
