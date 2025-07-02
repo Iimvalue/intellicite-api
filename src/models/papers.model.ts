@@ -1,7 +1,6 @@
 import mongoose, { Document, Schema, Types } from 'mongoose';
 
 export interface IPaper extends Document {
-  _id: Types.ObjectId;
   doi?: string;
   title: string;
   authors: string[];
@@ -13,13 +12,14 @@ export interface IPaper extends Document {
   sourceLink: string;
   isOpenAccess?: boolean;
   isPreprint?: boolean;
+  
 }
 
 
 const paperSchema = new Schema<IPaper>({
   doi: {
     type: String,
-    required: true,
+    required: false,
   },
   title: {
     type: String,

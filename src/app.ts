@@ -5,9 +5,8 @@ import dotenv from "dotenv";
 import { connectDB } from "./config/database";
 import userRoutes from "./routes/users.routes";
 import savedPaperRoutes from "./routes/savedPaper.routes";
-import paperRoutes from "./routes/paper.routes";
+import paperRoutes from "./routes/paper.routes"
 import userHistoryRoutes from "./routes/userHistory.routes";
-import citeCheckRoutes from "./routes/citeCheck.routes";
 dotenv.config();
 const port = process.env.PORT || 3000;
 const app: Application = express();
@@ -26,7 +25,6 @@ app.use("/api/users", userRoutes);
 app.use("/api/saved-papers", savedPaperRoutes);
 app.use("/api", paperRoutes);
 app.use("/api/user-history", userHistoryRoutes);
-app.use("/api/cite-check", citeCheckRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.json({

@@ -4,28 +4,43 @@ export interface IPaperReport extends Document {
   userId: Types.ObjectId;
   paperId: Types.ObjectId;
   report: string;
-  generatedAt: Date;
+  query: string;
+  type: 'citeCheck' | 'search';
 }
 
-const paperReportSchema = new Schema<IPaperReport>({
-  userId: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
+const paperReportSchema = new Schema<IPaperReport>(
+  {
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    paperId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Paper',
+      required: true,
+    },
+    query: {
+      type: String,
+      required: true,
+    },
+    report: {
+      type: String,
+      required: true,
+    },
+    type: {
+      type: String,
+      enum: ['search', 'citeCheck'],
+      default: 'search',
+      required: true,
+    },
   },
-  paperId: {
-    type: Schema.Types.ObjectId,
-    ref: 'Paper',
-    required: true,
-  },
-  report: {
-    type: String,
-    required: true,
-  },
-  generatedAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
-export const PaperReport = mongoose.model<IPaperReport>('PaperReport', paperReportSchema);
+export const PaperReport = mongoose.model<IPaperReport>(
+  'PaperReport',
+  paperReportSchema
+);

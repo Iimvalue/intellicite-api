@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { AuthRequest } from '../middlewares/auth.middleware';
 import {
   savePaper,
@@ -9,7 +9,7 @@ import {
 
 export const addSavedPaper = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const userId = req.user?.id;
+    const userId = req.user?._id;
 
     const { paperId, personalNotes } = req.body;
 
@@ -38,7 +38,7 @@ export const addSavedPaper = async (req: AuthRequest, res: Response): Promise<vo
 
 export const deleteSavedPaper = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const userId = req.user?.id;
+    const userId = req.user?._id;
 
     const { paperId } = req.params;
 
@@ -67,7 +67,7 @@ export const deleteSavedPaper = async (req: AuthRequest, res: Response): Promise
 
 export const getSavedPapers = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const userId = req.user?.id;
+    const userId = req.user?._id;
 
 
     if (!userId) {
@@ -90,7 +90,7 @@ export const getSavedPapers = async (req: AuthRequest, res: Response): Promise<v
 
 export const updateSavedPaperNotes = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const userId = req.user?.id;
+    const userId = req.user?._id;
 
     const { paperId } = req.params;
     const { personalNotes } = req.body;

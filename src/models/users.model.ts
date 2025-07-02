@@ -1,50 +1,24 @@
 import mongoose, { Document, Schema, Types } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
-interface ISearchHistory {
-  query: string;
-  date: Date;
-  results: Types.ObjectId[];
-}
-
-interface IUser extends Document {
-  _id: Types.ObjectId;
+export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
-  searchHistory: ISearchHistory[];
   comparePassword: (input: string) => Promise<boolean>;
   userData: {
     id: Types.ObjectId;
     name: string;
     email: string;
-    searchHistory: ISearchHistory[];
   };
 }
 
-const searchHistorySchema = new Schema<ISearchHistory>({
-  query: {
-    type: String,
-    required: true,
-  },
-  date: {
-    type: Date,
-    default: Date.now,
-  },
-  results: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'Paper',
-    },
-  ],
-});
 
 const userSchema = new Schema<IUser>(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    searchHistory: [searchHistorySchema],
   },
   { timestamps: true }
 );
@@ -70,12 +44,16 @@ userSchema.virtual('userData').get(function() {
     id: this._id,
     name: this.name,
     email: this.email,
-    searchHistory: this.searchHistory,
   };
 });
 
-userSchema.set('toJSON', { virtuals: true });
-userSchema.set('toObject', { virtuals: true });
+
+function removePassword(doc: any, ret: any) {
+  delete ret.password;
+  return ret;
+}
+
+userSchema.set('toJSON', { virtuals: true, transform: removePassword });
+userSchema.set('toObject', { virtuals: true, transform: removePassword });
 
 export const UserCollection = mongoose.model<IUser>('User', userSchema);
-export type { IUser, ISearchHistory };
