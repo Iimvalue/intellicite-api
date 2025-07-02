@@ -4,6 +4,6 @@ import { authenticate } from '../middlewares/auth.middleware';
 
 const router = Router();
 
-router.get('/papers/search',authenticate, searchPapersHandler);
+router.get('/search',authenticate, searchPapersHandler);
 
 export default router;
