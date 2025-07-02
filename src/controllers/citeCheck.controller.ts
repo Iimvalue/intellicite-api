@@ -12,7 +12,7 @@ export const generateCiteCheck = async (
   res: Response
 ): Promise<void> => {
   try {
-    const userId = req.user?.id;
+    const userId = req.user?._id;
     const { query, doi } = req.body;
 
     if (!userId || !query || !doi) {

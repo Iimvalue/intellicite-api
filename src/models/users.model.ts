@@ -1,8 +1,7 @@
 import mongoose, { Document, Schema, Types } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
-interface IUser extends Document {
-  _id: Types.ObjectId;
+export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
@@ -48,8 +47,13 @@ userSchema.virtual('userData').get(function() {
   };
 });
 
-userSchema.set('toJSON', { virtuals: true });
-userSchema.set('toObject', { virtuals: true });
+
+function removePassword(doc: any, ret: any) {
+  delete ret.password;
+  return ret;
+}
+
+userSchema.set('toJSON', { virtuals: true, transform: removePassword });
+userSchema.set('toObject', { virtuals: true, transform: removePassword });
 
 export const UserCollection = mongoose.model<IUser>('User', userSchema);
-export type { IUser };

@@ -3,7 +3,7 @@ import { AuthRequest } from '../middlewares/auth.middleware';
 import { getPapersWithReports } from '../services/papers.service';
 
 export const searchPapersHandler = async (req: AuthRequest, res: Response): Promise<void> => {
-  const userId = req.user?.id;
+  const userId = req.user?._id;
 
   if (!userId) {
     res.status(401).json({ success: false, message: 'Unauthorized' });
