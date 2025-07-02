@@ -16,7 +16,10 @@ export const generateCiteCheck = async (
     const { query, doi } = req.body;
 
     if (!userId || !query || !doi) {
-      res.status(400).json({ message: 'Missing user ID, query, or DOI' });
+      res.status(400).json({ 
+        success: false, 
+        message: 'missing user id, query, or doi' 
+      });
       return;
     }
 
@@ -24,10 +27,13 @@ export const generateCiteCheck = async (
 
     if (!paper) {
       const meta = await checkCitation(doi);
-      if (!meta) {
-        res.status(404).json({ message: 'Paper metadata not found' });
-        return;
-      }
+              if (!meta) {
+          res.status(404).json({ 
+            success: false, 
+            message: 'paper metadata not found' 
+          });
+          return;
+        }
 
       const citationCount = meta.openalex?.cited_by_count ?? 0;
 
@@ -65,10 +71,14 @@ export const generateCiteCheck = async (
       userId,
       paperId: paper._id,
       query,
-    });
+    }).populate('paperId');
 
     if (existing) {
-      res.status(200).json(existing);
+      res.status(200).json({
+        success: true,
+        message: 'citation report retrieved successfully',
+        data: existing
+      });
       return;
     }
 
@@ -88,12 +98,20 @@ export const generateCiteCheck = async (
       paperId: paper._id,
       query,
       report,
-      type: 'doi',
+      type: 'citeCheck',
     });
 
-    res.status(201).json(saved);
+    await saved.populate('paperId');
+    res.status(201).json({
+      success: true,
+      message: 'citation report generated successfully',
+      data: saved
+    });
   } catch (error) {
-    console.error('Error creating paper report from DOI:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error('error creating paper report from DOI:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'internal server error' 
+    });
   }
 };
