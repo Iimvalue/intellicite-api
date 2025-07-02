@@ -13,6 +13,7 @@ export interface IPaper extends Document {
   sourceLink: string;
   isOpenAccess?: boolean;
   isPreprint?: boolean;
+  
 }
 
 

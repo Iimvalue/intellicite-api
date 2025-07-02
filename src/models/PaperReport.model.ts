@@ -4,6 +4,7 @@ export interface IPaperReport extends Document {
   userId: Types.ObjectId;
   paperId: Types.ObjectId;
   report: string;
+  query?: string;
   generatedAt: Date;
 }
 
@@ -17,6 +18,10 @@ const paperReportSchema = new Schema<IPaperReport>({
     type: Schema.Types.ObjectId,
     ref: 'Paper',
     required: true,
+  },
+  query: {
+    type: String,
+    required: false,
   },
   report: {
     type: String,

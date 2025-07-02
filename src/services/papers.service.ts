@@ -83,6 +83,7 @@ export async function getPapersWithReports(query: string, userId: string) {
       // create new report document
       report = await PaperReport.create({
         userId,
+        query,
         paperId: paper._id,
         report: reportText,
       });
