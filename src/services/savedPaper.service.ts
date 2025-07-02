@@ -1,5 +1,4 @@
-import { Types } from "mongoose";
-import { SavedPaper, ISavedPaper } from "../models/savedPaper.model";
+import { SavedPaper, ISavedPaper } from '../models/savedPaper.model';
 
 export const savePaper = async (
   userId: string,
@@ -12,12 +11,8 @@ export const savePaper = async (
     await existing.save();
     return existing;
   }
-
-  const savedPaper = new SavedPaper({
-    userId: new Types.ObjectId(userId),
-    paperId: new Types.ObjectId(paperId),
-    personalNotes,
-  });
+// no need to cast the id as object mongoose does this on its own
+  const savedPaper = new SavedPaper({ userId, paperId, personalNotes });
 
   return await savedPaper.save();
 };
@@ -33,7 +28,7 @@ export const removeSavedPaper = async (
 export const getSavedPapersByUser = async (
   userId: string
 ): Promise<ISavedPaper[]> => {
-  return await SavedPaper.find({ userId }).populate("paperId");
+  return await SavedPaper.find({ userId }).populate('paperId').sort({ savedAt: -1 }).lean();
 };
 
 export const updatePersonalNotes = async (
