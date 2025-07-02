@@ -128,6 +128,7 @@ export const updateUserProfile = async (req: AuthRequest, res: Response): Promis
   }
 };
 
+// admin-only endpoint to get all users
 export const getUsers = async (_req: Request, res: Response): Promise<void> => {
   try {
     const users = await getAllUsers();
