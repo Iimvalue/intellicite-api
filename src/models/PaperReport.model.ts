@@ -4,8 +4,8 @@ export interface IPaperReport extends Document {
   userId: Types.ObjectId;
   paperId: Types.ObjectId;
   report: string;
-  query?: string;
-  type?: 'citeCheck' | 'search';
+  query: string;
+  type: 'citeCheck' | 'search';
 }
 
 const paperReportSchema = new Schema<IPaperReport>(
@@ -22,7 +22,7 @@ const paperReportSchema = new Schema<IPaperReport>(
     },
     query: {
       type: String,
-      required: false,
+      required: true,
     },
     report: {
       type: String,
@@ -30,8 +30,9 @@ const paperReportSchema = new Schema<IPaperReport>(
     },
     type: {
       type: String,
-      enum: ['search', 'doi'],
+      enum: ['search', 'citeCheck'],
       default: 'search',
+      required: true,
     },
   },
   {
