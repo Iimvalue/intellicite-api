@@ -9,7 +9,7 @@ import {
 import { generateToken } from '../utils/generateToken';
 import { AuthRequest } from '../middlewares/auth.middleware';
 // Register a new user
-export const registerUser = async (req: AuthRequest, res: Response): Promise<void> => {
+export const registerUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const { name, email, password } = req.body;
 
@@ -41,7 +41,7 @@ export const registerUser = async (req: AuthRequest, res: Response): Promise<voi
   }
 };
 
-export const loginUser = async (req: AuthRequest, res: Response): Promise<void> => {
+export const loginUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, password } = req.body;
 
