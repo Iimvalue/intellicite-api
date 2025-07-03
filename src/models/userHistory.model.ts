@@ -1,9 +1,15 @@
 import mongoose, { Schema, Document, Types } from 'mongoose';
 
+
+export interface IUserHistoryResult {
+  paper: Types.ObjectId;
+  report: Types.ObjectId;
+}
+
 export interface IUserHistory extends Document {
   userId: Types.ObjectId;
-  query: string; // The search query comes from the user , from the frontend.
-  results: Types.ObjectId[]; // Talal you can use mock data to test this , until I finish the paper retrieval feature. don't create a paper logic yet.
+  query: string;
+  results: IUserHistoryResult[];
 }
 
 const UserHistorySchema = new Schema<IUserHistory>({
@@ -18,8 +24,16 @@ const UserHistorySchema = new Schema<IUserHistory>({
   },
   results: [
     {
-      type: Schema.Types.ObjectId,
-      ref: 'Paper',
+      paper: {
+        type: Schema.Types.ObjectId,
+        ref: 'Paper',
+        required: true,
+      },
+      report: {
+        type: Schema.Types.ObjectId,
+        ref: 'PaperReport',
+        required: true,
+      },
     },
   ],
 },

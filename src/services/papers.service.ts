@@ -6,7 +6,9 @@ import {
 } from './search-openAI/externalApis.service';
 import { generateBadges } from '../utils/badge.helper';
 import { formatToPaperModel } from '../utils/formatToPaperModel';
+
 import { generateReport } from './search-openAI/openAiAssistant.service';
+import { addUserSearchHistoryService } from './userHistory.service';
 
 export async function getPapersWithReports(query: string, userId: string) {
   const results = await searchSemanticScholar(query, 3);
@@ -16,6 +18,7 @@ export async function getPapersWithReports(query: string, userId: string) {
   }
 
   const outputs = [];
+  const historyResults = [];
 
   for (const result of results) {
     const doi = result.externalIds.DOI;
@@ -93,6 +96,14 @@ export async function getPapersWithReports(query: string, userId: string) {
       paper,
       reportText: report.report,
     });
+    // add the paper and report IDs to the history results
+    historyResults.push({ paper: paper._id, report: report._id });
+  }
+  // store user search history after search is completed
+  try {
+    await addUserSearchHistoryService(userId, query, historyResults);
+  } catch (err) {
+    console.error('Failed to save user search history:', err);
   }
   // return the array of papers with their reports
   return outputs;
