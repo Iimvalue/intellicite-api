@@ -169,7 +169,6 @@ export const deleteSingleSearchHistory = async (
     res.status(200).json({ 
       success: true, 
       message: "history entry deleted successfully",
-      data: deleted
     });
   } catch (error) {
     console.error("Error deleting search history:", error);
