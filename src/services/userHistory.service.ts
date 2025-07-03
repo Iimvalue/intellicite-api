@@ -4,7 +4,8 @@ import { UserHistory } from '../models/userHistory.model';
 export async function getUserSearchHistoryService(userId: string) {
   try {
     return await UserHistory.find({ userId })
-      .populate('results')
+      .populate('results.paper')
+      .populate('results.report')
       .sort({ createdAt: -1 })
       .limit(10);
   } catch (error) {
@@ -20,7 +21,8 @@ export async function getSingleSearchHistoryService(
 ) {
   try {
     return await UserHistory.findOne({ _id: historyId, userId })
-      .populate('results');
+      .populate('results.paper')
+      .populate('results.report');
   } catch (error) {
     console.error('Error in getting single search history:', error);
     throw error;
