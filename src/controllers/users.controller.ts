@@ -4,9 +4,8 @@ import {
   findUserById,
   createUser,
   validateUserCredentials,
-  getAllUsers,
   updateUserById,
-  deleteUserById
+ 
 } from '../services/users.service';
 import { generateToken } from '../utils/generateToken';
 import { AuthRequest } from '../middlewares/auth.middleware';
@@ -118,17 +117,14 @@ export const updateUserProfile = async (req: AuthRequest, res: Response): Promis
       return;
     }
 
-    const user = await findUserById(userId);
+    const update: any = {};
+    if (name !== undefined) update.name = name;
+    if (email !== undefined) update.email = email;
+    const user = await updateUserById(userId, update);
     if (!user) {
       res.status(404).json({ success: false, message: 'User not found' });
       return;
     }
-
-    if (name) user.name = name;
-    if (email) user.email = email;
-
-    await user.save();
-
     res.status(200).json({
       success: true,
       message: 'User profile updated successfully',
@@ -142,66 +138,4 @@ export const updateUserProfile = async (req: AuthRequest, res: Response): Promis
   }
 };
 
-// Admin: Get all users
-export const getUsers = async (_req: AuthRequest, res: Response): Promise<void> => {
-  try {
-    const users = await getAllUsers();
-
-    res.status(200).json({
-      success: true,
-      message: 'Users retrieved successfully',
-      data: {
-        users: users.map((user) => user.userData),
-      },
-    });
-  } catch (error) {
-    console.error('Get users error:', error);
-    res.status(500).json({ success: false, message: 'Internal server error' });
-  }
-};
-
-// admin: update user by ID
-export const adminUpdateUser = async (req: AuthRequest, res: Response): Promise<void> => {
-  try {
-    const { id } = req.params;
-    const { name, email, role, password } = req.body;
-    const update: any = {};
-    if (name !== undefined) update.name = name;
-    if (email !== undefined) update.email = email;
-    if (role !== undefined) update.role = role;
-    if (password !== undefined) update.password = password;
-    const user = await updateUserById(id, update);
-    if (!user) {
-      res.status(404).json({ success: false, message: 'User not found' });
-      return;
-    }
-    res.status(200).json({
-      success: true,
-      message: 'User updated successfully',
-      data: { user: user.userData },
-    });
-  } catch (error) {
-    console.error('Admin update user error:', error);
-    res.status(500).json({ success: false, message: 'Internal server error' });
-  }
-};
-
-// admin: delete user by ID
-export const adminDeleteUser = async (req: AuthRequest, res: Response): Promise<void> => {
-  try {
-    const { id } = req.params;
-    const user = await deleteUserById(id);
-    if (!user) {
-      res.status(404).json({ success: false, message: 'User not found' });
-      return;
-    }
-    res.status(200).json({
-      success: true,
-      message: 'User deleted successfully',
-      data: { user: user.userData },
-    });
-  } catch (error) {
-    console.error('Admin delete user error:', error);
-    res.status(500).json({ success: false, message: 'Internal server error' });
-  }
-};
+// ...admin user functions removed. All admin user logic is now in the admin folder...

@@ -60,3 +60,4 @@ const paperSchema = new Schema<IPaper>({
 }, { timestamps: true } );
 
 export const Paper = mongoose.model<IPaper>('Paper', paperSchema);
+export const PaperCollection = Paper;
