@@ -3,14 +3,18 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
 dotenv.config();
+
 // added this to fix typescript error
+
 export interface JwtPayload {
   _id: string;
-  email: string;
-  name: string;
+  email?: string;
+  name?: string;
+  role?: string;
   iat?: number;
   exp?: number;
 }
+
 
 export interface AuthRequest extends Request {
   user?: JwtPayload;
