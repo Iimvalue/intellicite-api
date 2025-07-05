@@ -6,7 +6,7 @@ import {
     addUserSearchHistory,
     deleteSingleSearchHistory,
     getSingleSearchHistory
-  } from '../controllers/userHistory.controller';
+  } from '../controllers/userSearchHistory.controller';
 const router = express.Router();
 
 router.get("/", authenticate, getUserSearchHistory);

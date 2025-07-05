@@ -1,4 +1,4 @@
-import { UserHistory } from '../models/userHistory.model';
+import { UserHistory } from '../models/userSearchHistory.model';
 
 // get the last 10 search history entries for a user
 export async function getUserSearchHistoryService(userId: string) {

@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { AuthRequest } from '../middlewares/auth.middleware';
-import { Paper } from '../models/papers.model';
-import { PaperReport } from '../models/PaperReport.model';
+import { Paper } from '../models/paper.model';
+import { PaperReport } from '../models/paperReport.model';
 import { checkCitation } from '../services/search-openAI/externalApis.service';
 import { generateBadges } from '../utils/badge.helper';
 import { generateReport } from '../services/search-openAI/openAiAssistant.service';

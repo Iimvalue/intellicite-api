@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { AuthRequest } from '../middlewares/auth.middleware';
-import { getPapersWithReports } from '../services/papers.service';
+import { getPapersWithReports } from '../services/paper.service';
 
 export const searchPapersHandler = async (req: AuthRequest, res: Response): Promise<void> => {
   const userId = req.user?._id;

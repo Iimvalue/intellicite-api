@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { authenticate } from '../middlewares/auth.middleware';
-import { searchPapersHandler } from '../controllers/papers.controller';
-import { generateCiteCheck } from '../controllers/citeCheck.controller';
+import { searchPapersHandler } from '../controllers/paper.controller';
+import { generateCiteCheck } from '../controllers/citationCheck.controller';
 
 const router = Router();
 

@@ -1,5 +1,5 @@
-import { IUser } from '../models/users.model';
-import { UserCollection } from '../models/users.model';
+import { IUser } from '../models/user.model';
+import { UserCollection } from '../models/user.model';
 
 
 

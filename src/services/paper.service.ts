@@ -1,5 +1,5 @@
-import { Paper } from '../models/papers.model';
-import { PaperReport } from '../models/PaperReport.model';
+import { Paper } from '../models/paper.model';
+import { PaperReport } from '../models/paperReport.model';
 import {
   searchSemanticScholar,
   enrichPaper,
@@ -8,7 +8,7 @@ import { generateBadges } from '../utils/badge.helper';
 import { formatToPaperModel } from '../utils/formatToPaperModel';
 
 import { generateReport } from './search-openAI/openAiAssistant.service';
-import { addUserSearchHistoryService } from './userHistory.service';
+import { addUserSearchHistoryService } from './userSearchHistory.service';
 
 export async function getPapersWithReports(query: string, userId: string) {
   const results = await searchSemanticScholar(query, 3);

@@ -5,7 +5,7 @@ import {
   getUserProfile,
   updateUserProfile,
 
-} from '../controllers/users.controller';
+} from '../controllers/user.controller';
 import { authenticate } from '../middlewares/auth.middleware';
 
 const router = Router();

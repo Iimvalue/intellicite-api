@@ -1,4 +1,4 @@
-import { UserCollection } from '../../models/users.model';
+import { UserCollection } from '../../models/user.model';
 
 export const getAllUsers = async () => {
   return await UserCollection.find();

@@ -1,4 +1,4 @@
-import { PaperCollection } from '../../models/papers.model';
+import { PaperCollection } from '../../models/paper.model';
 
 export const deletePaperById = async (id: string) => {
   return await PaperCollection.findByIdAndDelete(id);

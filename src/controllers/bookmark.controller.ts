@@ -1,121 +1,101 @@
 import { Response } from 'express';
 import { AuthRequest } from '../middlewares/auth.middleware';
 import {
-  savePaper,
-  removeSavedPaper,
-  getSavedPapersByUser,
-  updatePersonalNotes
-} from '../services/savedPaper.service';
+  saveBookmark,
+  removeBookmark,
+  getBookmarksByUser,
+  updateBookmarkNotes
+} from '../services/bookmark.service';
 
-export const addSavedPaper = async (req: AuthRequest, res: Response): Promise<void> => {
+export const addBookmark = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const userId = req.user?._id;
-
     const { paperId, personalNotes } = req.body;
-
     if (!userId) {
       res.status(401).json({ success: false, message: 'User not authenticated' });
       return;
     }
-
     if (!paperId) {
       res.status(400).json({ success: false, message: 'Paper ID is required' });
       return;
     }
-
-    const savedPaper = await savePaper(userId, paperId, personalNotes || '');
-
+    const bookmark = await saveBookmark(userId, paperId, personalNotes || '');
     res.status(201).json({
       success: true,
-      message: 'Paper saved successfully',
-      data: savedPaper,
+      message: 'Paper bookmarked successfully',
+      data: bookmark,
     });
   } catch (error) {
-    console.error('Add saved paper error:', error);
+    console.error('Add bookmark error:', error);
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
 
-export const deleteSavedPaper = async (req: AuthRequest, res: Response): Promise<void> => {
+export const deleteBookmark = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const userId = req.user?._id;
-
     const { paperId } = req.params;
-
     if (!userId) {
       res.status(401).json({ success: false, message: 'User not authenticated' });
       return;
     }
-
     if (!paperId) {
       res.status(400).json({ success: false, message: 'Paper ID is required' });
       return;
     }
-
-    const removed = await removeSavedPaper(userId, paperId);
+    const removed = await removeBookmark(userId, paperId);
     if (!removed) {
-      res.status(404).json({ success: false, message: 'Saved paper not found' });
+      res.status(404).json({ success: false, message: 'Bookmark not found' });
       return;
     }
-
-    res.status(200).json({ success: true, message: 'Saved paper removed successfully' });
+    res.status(200).json({ success: true, message: 'Bookmark removed successfully' });
   } catch (error) {
-    console.error('Delete saved paper error:', error);
+    console.error('Delete bookmark error:', error);
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
 
-export const getSavedPapers = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getBookmarks = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const userId = req.user?._id;
-
-
     if (!userId) {
       res.status(401).json({ success: false, message: 'User not authenticated' });
       return;
     }
-
-    const savedPapers = await getSavedPapersByUser(userId);
-
+    const bookmarks = await getBookmarksByUser(userId);
     res.status(200).json({
       success: true,
-      message: 'Saved papers retrieved successfully',
-      data: savedPapers,
+      message: 'Bookmarks retrieved successfully',
+      data: bookmarks,
     });
   } catch (error) {
-    console.error('Get saved papers error:', error);
+    console.error('Get bookmarks error:', error);
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
 
-export const updateSavedPaperNotes = async (req: AuthRequest, res: Response): Promise<void> => {
+export const updateNotes = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const userId = req.user?._id;
-
     const { paperId } = req.params;
     const { personalNotes } = req.body;
-
     if (!userId) {
       res.status(401).json({ success: false, message: 'User not authenticated' });
       return;
     }
-
     if (!paperId) {
       res.status(400).json({ success: false, message: 'Paper ID is required' });
       return;
     }
-
-    const updatedPaper = await updatePersonalNotes(userId, paperId, personalNotes || '');
-
-    if (!updatedPaper) {
-      res.status(404).json({ success: false, message: 'Saved paper not found' });
+    const updatedBookmark = await updateBookmarkNotes(userId, paperId, personalNotes || '');
+    if (!updatedBookmark) {
+      res.status(404).json({ success: false, message: 'Bookmark not found' });
       return;
     }
-
     res.status(200).json({
       success: true,
       message: 'Personal notes updated successfully',
-      data: updatedPaper,
+      data: updatedBookmark,
     });
   } catch (error) {
     console.error('Update personal notes error:', error);

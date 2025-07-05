@@ -5,7 +5,7 @@ import {
   getSingleSearchHistoryService,
   addUserSearchHistoryService,
   deleteSingleSearchHistoryService
-} from '../services/userHistory.service';
+} from '../services/userSearchHistory.service';
 
 // retrieves the last 10 search history entries for the authenticated user.
 export const getUserSearchHistory = async (

@@ -1,5 +1,5 @@
-import { UserCollection } from '../../models/users.model';
-import { PaperCollection } from '../../models/papers.model';
+import { UserCollection } from '../../models/user.model';
+import { PaperCollection } from '../../models/paper.model';
 
 export const getUserStats = async () => {
   const total = await UserCollection.countDocuments();

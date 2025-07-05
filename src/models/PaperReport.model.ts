@@ -8,7 +8,7 @@ export interface IPaperReport extends Document {
   type: 'citeCheck' | 'search';
 }
 
-const paperReportSchema = new Schema<IPaperReport>(
+export const paperReportSchema = new Schema<IPaperReport>(
   {
     userId: {
       type: Schema.Types.ObjectId,

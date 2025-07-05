@@ -6,7 +6,7 @@ import {
   validateUserCredentials,
   updateUserById,
  
-} from '../services/users.service';
+} from '../services/user.service';
 import { generateToken } from '../utils/generateToken';
 import { AuthRequest } from '../middlewares/auth.middleware';
 // Register a new user

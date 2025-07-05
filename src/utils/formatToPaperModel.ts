@@ -1,4 +1,4 @@
-import { IPaper } from '../models/papers.model';
+import { IPaper } from '../models/paper.model';
 
 export function formatToPaperModel(
   doi: string,

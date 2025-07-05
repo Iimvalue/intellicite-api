@@ -1,4 +1,3 @@
-import { PaperCollection } from '../../models/papers.model';
 import { Request, Response } from 'express';
 import { deletePaperById, getAllPapers } from '../services/adminPaper.service';
 
