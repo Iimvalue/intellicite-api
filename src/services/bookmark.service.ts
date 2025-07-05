@@ -27,7 +27,7 @@ export const removeBookmark = async (
 export const getBookmarksByUser = async (
   userId: string
 ): Promise<IBookmark[]> => {
-  return await Bookmark.find({ userId }).populate('paperId').sort({ savedAt: -1 }).lean();
+  return await Bookmark.find({ userId }).populate('paperId').sort({ createdAt: -1 }).lean();
 };
 
 export const updateBookmarkNotes = async (
