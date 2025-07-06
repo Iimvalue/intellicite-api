@@ -7,12 +7,16 @@ export interface IUser extends Document {
   password: string;
   role: 'user' | 'admin';
   comparePassword: (input: string) => Promise<boolean>;
+  createdAt?: Date;
+  updatedAt?: Date;
 
   userData: {
     id: Types.ObjectId;
     name: string;
     email: string;
     role: 'user' | 'admin';
+    createdAt?: Date;
+    updatedAt?: Date;
   };
 }
 
@@ -53,6 +57,8 @@ userSchema.virtual('userData').get(function() {
     name: this.name,
     email: this.email,
     role: this.role,
+    createdAt: this.createdAt,  
+    updatedAt: this.updatedAt   
   };
 });
 
