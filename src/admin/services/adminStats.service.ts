@@ -39,7 +39,6 @@ export const getRecentUsers = async (limit = 5) => {
   return await UserCollection.find()
     .sort({ createdAt: -1 })
     .limit(limit)
-    .select('-password');
 };
 
 export const getRecentPapers = async (limit = 5) => {
