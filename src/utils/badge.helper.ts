@@ -14,7 +14,7 @@ function getCurrentYear(): number {
   return cachedYear;
 }
 
-// badge configuration - easily adjustable thresholds
+// badge configuration
 const BADGE_CONFIG = {
   citation: {
     highlyCited: 1000,

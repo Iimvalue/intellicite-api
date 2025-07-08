@@ -31,7 +31,7 @@ const unpaywallAPI = createAxiosInstance('https://api.unpaywall.org', 8000);
   // exponential backoff utility
 const exponentialBackoff = async (attempt: number, maxAttempts: number = 3): Promise<void> => {
   if (attempt >= maxAttempts) return;
-  const delay = Math.min(1000 * Math.pow(2, attempt), 30000); 
+  const delay = Math.min(1000 * Math.pow(2, attempt), 10000); 
   await new Promise(resolve => setTimeout(resolve, delay));
 };
 
@@ -51,7 +51,9 @@ const retryRequest = async <T>(
       // rate limiting
       if (error.response?.status === 429 && !isLastAttempt) {
         console.warn(`${apiName} rate limit hit (429). Retrying after backoff...`);
-        await exponentialBackoff(attempt);
+        const retryAfter = error.response?.headers?.['retry-after'] || 2;
+        const delay = Math.min(parseInt(retryAfter) * 1000, 5000); 
+        await new Promise(resolve => setTimeout(resolve, delay));
         continue;
       }
       
@@ -124,13 +126,19 @@ export async function searchSemanticScholar(query: string, count: number = 3) {
     const valid = papers.filter((p: any) => p.externalIds?.DOI);
     console.log(`page ${pagesTried + 1}: ${papers.length} total, ${valid.length} with DOIs`);
 
-    doiPapers.push(...valid);
+    for (const paper of valid) {
+      doiPapers.push(paper);
+      if (doiPapers.length >= count) {
+        console.log(`Found enough papers with DOIs (${doiPapers.length}/${count}). Stopping search immediately.`);
+        return doiPapers.slice(0, count);
+      }
+    }
+    
     offset += pageSize;
     pagesTried++;
 
-    // Rate limiting delay only between pages
     if (pagesTried < maxPages && doiPapers.length < count) {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 2000)); 
     }
   }
 

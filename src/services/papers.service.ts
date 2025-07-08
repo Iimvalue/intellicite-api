@@ -11,10 +11,11 @@ import { generateReport } from './search-openAI/openAiAssistant.service';
 import { addUserSearchHistoryService } from './userHistory.service';
 
 export async function getPapersWithReports(query: string, userId: string) {
-  const results = await searchSemanticScholar(query, 3);
+  const results = await searchSemanticScholar(query, 5);
 
   if (results.length === 0) {
-    throw new Error('no papers with doi found.');
+    console.warn('No papers found for query:', query);
+    return []; 
   }
 
   // extract DOIs for operations
