@@ -7,12 +7,53 @@ export interface IPaper extends Document {
   publicationDate: Date;
   journal: string;
   citationCount: number;
-  badges: string[]; 
+  badges: string[];
   pdfLink: string;
   sourceLink: string;
   isOpenAccess?: boolean;
   isPreprint?: boolean;
-  
+  abstract?: string;
+  keywords?: string[];
+  language?: string;
+  type?: string;
+  license?: string;
+  publisher?: string;
+  issn?: string[];
+  fwci?: number;
+  citationPercentile?: number;
+  isHighlyCited?: boolean;
+  isInTop10Percent?: boolean;
+  authorCount?: number;
+  institutionCount?: number;
+  countryCount?: number;
+  isRetracted?: boolean;
+  hasFulltext?: boolean;
+  meshTerms?: string[];
+  topics?: Array<{
+    id: string;
+    name: string;
+    score: number;
+    field?: string;
+    subfield?: string;
+  }>;
+  funders?: Array<{
+    id: string;
+    name: string;
+    awardId?: string;
+  }>;
+  venueType?: string;
+  venueRank?: string;
+  authorInstitutions?: Array<{
+    authorName: string;
+    institutions: string[];
+    countries: string[];
+  }>;
+  citationsByYear?: Array<{
+    year: number;
+    count: number;
+  }>;
+  relatedWorks?: string[];
+  referencedWorks?: string[];
 }
 
 
@@ -32,7 +73,7 @@ const paperSchema = new Schema<IPaper>({
   },
   journal: {
     type: String,
-  }, 
+  },
   citationCount: {
     type: Number,
     required: false,
@@ -57,7 +98,109 @@ const paperSchema = new Schema<IPaper>({
     default: false
   },
 
-}, { timestamps: true } );
+  abstract: {
+    type: String,
+    required: false
+  },
+  keywords: [{
+    type: String
+  }],
+  language: {
+    type: String,
+    required: false
+  },
+  type: {
+    type: String,
+    required: false
+  },
+  license: {
+    type: String,
+    required: false
+  },
+  publisher: {
+    type: String,
+    required: false
+  },
+  issn: [{
+    type: String
+  }],
 
+  fwci: {
+    type: Number,
+    required: false
+  },
+  citationPercentile: {
+    type: Number,
+    required: false
+  },
+  isHighlyCited: {
+    type: Boolean,
+    default: false
+  },
+  isInTop10Percent: {
+    type: Boolean,
+    default: false
+  },
+  authorCount: {
+    type: Number,
+    required: false
+  },
+  institutionCount: {
+    type: Number,
+    required: false
+  },
+  countryCount: {
+    type: Number,
+    required: false
+  },
+  isRetracted: {
+    type: Boolean,
+    default: false
+  },
+  hasFulltext: {
+    type: Boolean,
+    default: false
+  },
+  meshTerms: [{
+    type: String
+  }],
+  topics: [{
+    id: String,
+    name: String,
+    score: Number,
+    field: String,
+    subfield: String
+  }],
+  funders: [{
+    id: String,
+    name: String,
+    awardId: String
+  }],
+  venueType: {
+    type: String,
+    required: false
+  },
+  venueRank: {
+    type: String,
+    required: false
+  },
+  authorInstitutions: [{
+    authorName: String,
+    institutions: [String],
+    countries: [String]
+  }],
+  citationsByYear: [{
+    year: Number,
+    count: Number
+  }],
+  relatedWorks: [{
+    type: String
+  }],
+  referencedWorks: [{
+    type: String
+  }]
+}, { timestamps: true });
+
+// export the paper model
 export const Paper = mongoose.model<IPaper>('Paper', paperSchema);
 export const PaperCollection = Paper;
