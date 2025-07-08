@@ -132,7 +132,7 @@ export async function searchSemanticScholar(query: string, count: number = 3) {
 
     if (!result) {
       console.warn(`Semantic Scholar search failed after retries for query: ${query}`);
-      throw new Error(`No papers found for query: ${query}`);
+      break;
     }
 
     const papers = Array.isArray(result.data) ? result.data : [];
@@ -162,7 +162,8 @@ export async function searchSemanticScholar(query: string, count: number = 3) {
   }
 
   if (doiPapers.length === 0) {
-    throw new Error(`No papers found for query: ${query}`);
+    console.warn(`No papers found for query: ${query}`);
+    return []; // Return empty array instead of throwing error
   }
 
   console.log(`Found ${doiPapers.length} papers with DOIs for query: ${query}`);
