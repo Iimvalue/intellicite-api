@@ -27,13 +27,13 @@ export const generateCiteCheck = async (
 
     if (!paper) {
       const meta = await checkCitation(doi);
-              if (!meta) {
-          res.status(404).json({ 
-            success: false, 
-            message: 'paper metadata not found' 
-          });
-          return;
-        }
+      if (!meta) {
+        res.status(404).json({ 
+          success: false, 
+          message: 'paper metadata not found' 
+        });
+        return;
+      }
 
       const citationCount = meta.openalex?.cited_by_count ?? 0;
 

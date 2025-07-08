@@ -11,33 +11,34 @@ import { generateReport } from './search-openAI/openAiAssistant.service';
 import { addUserSearchHistoryService } from './userHistory.service';
 
 export async function getPapersWithReports(query: string, userId: string) {
-  const results = await searchSemanticScholar(query, 5);
+  try {
+    const results = await searchSemanticScholar(query, 5);
 
-  if (results.length === 0) {
-    console.warn('No papers found for query:', query);
-    return []; 
-  }
+    if (results.length === 0) {
+      console.warn('No papers found for query:', query);
+      return []; 
+    }
 
-  // extract DOIs for operations
-  const dois = results.map(result => result.externalIds.DOI).filter(Boolean);
-  
-  // find existing papers
-  const existingPapers = await Paper.find({ doi: { $in: dois } });
-  const existingPapersByDoi = new Map(existingPapers.map(paper => [paper.doi, paper]));
+    // extract DOIs for operations
+    const dois = results.map(result => result.externalIds.DOI).filter(Boolean);
+    
+    // find existing papers
+    const existingPapers = await Paper.find({ doi: { $in: dois } });
+    const existingPapersByDoi = new Map(existingPapers.map(paper => [paper.doi, paper]));
 
-  // process papers in parallel 
-  const paperPromises = results.map(async (result, index) => {
-    try {
-      const doi = result.externalIds.DOI;
-      let paper = existingPapersByDoi.get(doi);
+    // process papers in parallel 
+    const paperPromises = results.map(async (result, index) => {
+      try {
+        const doi = result.externalIds.DOI;
+        let paper = existingPapersByDoi.get(doi);
 
-      if (!paper) {
-        // if paper not found in the database, enrich it using the doi
-        const meta = await enrichPaper(doi);
-        if (!meta) {
-          console.warn(`no metadata found for this paper: ${doi}`);
-          return null;
-        }
+        if (!paper) {
+          // if paper not found in the database, enrich it using the doi
+          const meta = await enrichPaper(doi);
+          if (!meta) {
+            console.warn(`no metadata found for this paper: ${doi}`);
+            return null;
+          }
         // construct the metadata needed to generate badges
         const citationCount = meta.openalex?.cited_by_count ?? 0;
 
@@ -164,4 +165,8 @@ export async function getPapersWithReports(query: string, userId: string) {
 
   // return the array of papers with their reports
   return outputs;
+  } catch (error) {
+    console.error('Error in getPapersWithReports:', error);
+    throw error; 
+  }
 }

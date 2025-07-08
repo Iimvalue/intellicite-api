@@ -28,6 +28,22 @@ const crossrefAPI = createAxiosInstance('https://api.crossref.org', 10000);
 const openAlexAPI = createAxiosInstance('https://api.openalex.org', 10000);
 const unpaywallAPI = createAxiosInstance('https://api.unpaywall.org', 8000);
 
+let lastSemanticScholarCall = 0;
+const SEMANTIC_SCHOLAR_DELAY = 3000; 
+
+const throttleSemanticScholar = async (): Promise<void> => {
+  const now = Date.now();
+  const timeSinceLastCall = now - lastSemanticScholarCall;
+  
+  if (timeSinceLastCall < SEMANTIC_SCHOLAR_DELAY) {
+    const waitTime = SEMANTIC_SCHOLAR_DELAY - timeSinceLastCall;
+    console.log(`Throttling Semantic Scholar API: waiting ${waitTime}ms`);
+    await new Promise(resolve => setTimeout(resolve, waitTime));
+  }
+  
+  lastSemanticScholarCall = Date.now();
+};
+
   // backoff utility
 const exponentialBackoff = async (attempt: number, maxAttempts: number = 3): Promise<void> => {
   if (attempt >= maxAttempts) return;
@@ -50,10 +66,8 @@ const retryRequest = async <T>(
       
       // rate limiting
       if (error.response?.status === 429 && !isLastAttempt) {
-        console.warn(`${apiName} rate limit hit (429). Retrying after backoff...`);
-        const retryAfter = error.response?.headers?.['retry-after'] || 5;
-        const baseDelay = apiName === 'Semantic Scholar' ? 10000 : 2000; 
-        const delay = Math.max(parseInt(retryAfter) * 1000, baseDelay * (attempt + 1));
+        console.warn(`${apiName} rate limit hit (429). Retrying after longer delay...`);
+        const delay = apiName === 'Semantic Scholar' ? 15000 : 5000; // 15s for Semantic Scholar, 5s for others
         console.log(`Waiting ${delay/1000}s before retry attempt ${attempt + 1}/${maxRetries}`);
         await new Promise(resolve => setTimeout(resolve, delay));
         continue;
@@ -95,7 +109,8 @@ export async function searchSemanticScholar(query: string, count: number = 3) {
   const maxPages = 5;
   let pagesTried = 0;
 
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  // Initial throttling delay
+  await throttleSemanticScholar();
 
   while (doiPapers.length < count && pagesTried < maxPages) {
     const result = await retryRequest(async () => {
@@ -113,11 +128,11 @@ export async function searchSemanticScholar(query: string, count: number = 3) {
       }
 
       return response.data;
-    }, 3, 'Semantic Scholar');
+    }, 4, 'Semantic Scholar'); 
 
     if (!result) {
-      console.warn('Semantic Scholar search failed after retries.');
-      break;
+      console.warn(`Semantic Scholar search failed after retries for query: ${query}`);
+      throw new Error(`No papers found for query: ${query}`);
     }
 
     const papers = Array.isArray(result.data) ? result.data : [];
@@ -142,11 +157,15 @@ export async function searchSemanticScholar(query: string, count: number = 3) {
     pagesTried++;
 
     if (pagesTried < maxPages && doiPapers.length < count) {
-      await new Promise(resolve => setTimeout(resolve, 5000)); 
+      await throttleSemanticScholar();
     }
   }
 
-  // console.log(`total valid papers with DOI: ${doiPapers.length}`);
+  if (doiPapers.length === 0) {
+    throw new Error(`No papers found for query: ${query}`);
+  }
+
+  console.log(`Found ${doiPapers.length} papers with DOIs for query: ${query}`);
   return doiPapers.slice(0, count);
 }
 
@@ -155,8 +174,8 @@ export async function searchSemanticScholar(query: string, count: number = 3) {
 // https://api.semanticscholar.org/graph/v1/paper/DOI:<doi> (<<) an example get request
 
 export async function getFromSemanticScholar(doi: string) {
-  // add delay before individual requests to help with rate limiting
-  await new Promise(resolve => setTimeout(resolve, 1000));
+  // Throttle the call
+  await throttleSemanticScholar();
   
   return await retryRequest(async () => {
     const encodedDoi = encodeURIComponent(doi);
@@ -171,7 +190,7 @@ export async function getFromSemanticScholar(doi: string) {
     }
     
     return response.data;
-  }, 4, 'Semantic Scholar'); // increased retries to 4
+  }, 4, 'Semantic Scholar');
 }
 
 // these are the APIs used to enrich the paper data

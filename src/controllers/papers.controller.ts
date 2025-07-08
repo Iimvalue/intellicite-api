@@ -16,6 +16,24 @@ export const searchPapersHandler = async (req: AuthRequest, res: Response): Prom
     return;
   }
 
-  const results = await getPapersWithReports(query, userId);
-  res.status(200).json({ success: true, data: results });
+  try {
+    const results = await getPapersWithReports(query, userId);
+    res.status(200).json({ success: true, data: results });
+  } catch (error: any) {
+    console.error('Search papers error:', error);
+    
+    if (error.message && error.message.includes('No papers found for query')) {
+      res.status(404).json({ 
+        success: false, 
+        message: `No papers found for query: ${query}`,
+        error: 'Semantic Scholar API may be rate limited. Please try again in a few minutes.'
+      });
+    } else {
+      res.status(500).json({ 
+        success: false, 
+        message: 'Internal server error', 
+        error: 'Failed to search papers. Please try again later.'
+      });
+    }
+  }
 };
