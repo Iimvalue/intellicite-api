@@ -53,7 +53,7 @@ IntelliCite هو أداة مساعدة للبحث الأكاديمي تساعد 
 **Figma:** [https://www.figma.com/design/AOBplsedeefft6SPW3KOt5/Final-Tuwaiq-Project?t=MxYOGKv0Wr0tDNN5-1](https://www.figma.com/design/AOBplsedeefft6SPW3KOt5/Final-Tuwaiq-Project?t=MxYOGKv0Wr0tDNN5-1)
 
 ## رابط النشر
-
+Frontend: https://intellicite-ui.onrender.com
 Backend API: https://intellicite-api.onrender.com
 
 ## التقنيات المستخدمة
@@ -79,7 +79,7 @@ Backend API: https://intellicite-api.onrender.com
 
 ```bash
 # استنساخ المشروع
-git clone [repository-url]
+git clone https://github.com/Iimvalue/intellicite-api.git
 
 # الانتقال إلى مجلد المشروع
 cd intellicite
