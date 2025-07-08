@@ -79,18 +79,11 @@ export async function getPapersWithReports(query: string, userId: string) {
           countryCount: meta.openalex?.countries_distinct_count,
           isRetracted: meta.openalex?.is_retracted,
           hasFulltext: meta.openalex?.has_fulltext,
-          meshTerms: meta.openalex?.mesh?.map((mesh: any) => mesh.descriptor_name).filter(Boolean),
           funders: meta.openalex?.grants?.map((grant: any) => ({
             id: grant.funder || '',
             name: grant.funder_display_name || '',
             awardId: grant.award_id || ''
-          })),
-          topics: meta.openalex?.topics?.map((topic: any) => ({
-            id: topic.id || '',
-            name: topic.display_name || '',
-            score: topic.score || 0,
-            field: topic.field?.display_name || ''
-          })),
+          })) || [],
           language: meta.openalex?.language,
           type: meta.openalex?.type || meta.crossref?.type
         };
