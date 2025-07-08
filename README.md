@@ -1,51 +1,92 @@
-# Project Setup
+# IntelliCite
 
-Follow the steps below to set up the project:
+## نبذة عن المشروع
 
-## Prerequisites
-- Node.js (v16 or higher)
-- npm (v8 or higher)
-- MongoDB (or any database you are using)
+IntelliCite هو أداة مساعدة للبحث الأكاديمي تساعد الطلاب والباحثين على اكتشاف وتقييم وإدارة الأوراق الأكاديمية من خلال سير عمل مبسط. يقوم المستخدمون بالبحث حسب الموضوع ويحصلون على تقارير مدعومة بالذكاء الاصطناعي تشرح مدى صلة كل ورقة بحثية باستفسارهم، بالإضافة إلى شارات تقييم تلقائية مثل "عالي الاستشهاد" أو "قديم" بناءً على مقاييس الاستشهاد. يتضمن النظام ميزات عملية لحفظ الأوراق وتوليد الاستشهادات بتنسيقات متعددة وتتبع تاريخ البحث والوصول إلى ملفات PDF الكاملة، بالإضافة إلى أداة "Cite Check" التي تقيم جودة الأوراق وتقترح بدائل أفضل للمصادر الضعيفة. تتضمن الميزات المستقبلية المخططة إمكانية إنشاء ملصقات أكاديمية، مما يجعل هذا حلاً شاملاً لسير العمل البحثي يتجاوز مجرد اكتشاف الأوراق ليوفر تحليلاً ذكياً وتقييماً للجودة.
 
-## Installation
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/your-username/your-repo.git
-    ```
-2. Navigate to the intellicite-api directory:
-    ```bash
-    cd intellicite-api
-    ```
-3. Install dependencies:
-    ```bash
-    npm install
-    ```
+## الفئة المستهدفة
 
-## Configuration
-1. Change a `.env.example` to `.env` file in the root of the intellicite-api directory.
-2. Add the following environment variables:
-    ```env
-    PORT=3000
-    DATABASE_URL=your-database-url
-    ```
+- الباحثون الأكاديميون
+- طلاب الجامعات
+- الطلاب في الدراسات العليا
 
-## Running the Project
-1. Start the development server:
-    ```bash
-    npm run dev
-    ```
-2. The server should now be running at `http://localhost:3000`.
 
-## Folder Structure
-```
-backend/
-├── src/
-│   ├── controllers/
-│   ├── models/
-│   ├── routes/
-│   ├── utils/
-├── tests/
-├── .env
-├── package.json
-└── README.md
+## الميزات الرئيسية
+
+### البحث والاكتشاف
+- البحث عن الأوراق الأكاديمية حسب الموضوع
+- تكامل مع APIs مثل Semantic Scholar
+- تقارير مدعومة بالذكاء الاصطناعي
+
+### التقييم والتحليل
+- شارات تقييم تلقائية ("عالي الاستشهاد"، "حديث"، "قديم")
+- أداة "Cite Check" للتحقق من جودة الأوراق
+- اقتراح بدائل أفضل للمصادر الضعيفة
+
+### الإدارة والتنظيم
+- حفظ الأوراق للرجوع إليها لاحقاً
+- تتبع تاريخ البحث
+- الوصول إلى ملفات PDF الكاملة
+
+### الاستشهاد والتوثيق
+- توليد الاستشهادات بتنسيقات متعددة (APA، MLA، إلخ)
+- تصدير الاستشهادات
+
+
+
+
+
+## نقاط النهاية للAPI
+
+| المسار | الوصف |
+|--------|--------|
+| `/api/users` | إدارة المستخدمين والمصادقة |
+| `/api/papers` | البحث واسترجاع الأوراق الأكاديمية |
+| `/api/bookmarks` | حفظ وإدارة الأوراق المحفوظة |
+| `/api/user-history` | تتبع تاريخ البحث للمستخدم |
+| `/api/cite-check` | التحقق من جودة الاستشهادات المحددة |
+
+## تصميم المشروع
+
+يمكن الاطلاع على التصميم الخاص بالمشروع عبر الرابط التالي:
+
+**Figma:** [https://www.figma.com/design/AOBplsedeefft6SPW3KOt5/Final-Tuwaiq-Project?t=MxYOGKv0Wr0tDNN5-1](https://www.figma.com/design/AOBplsedeefft6SPW3KOt5/Final-Tuwaiq-Project?t=MxYOGKv0Wr0tDNN5-1)
+
+## رابط النشر
+
+Backend API: https://intellicite-api.onrender.com
+
+## التقنيات المستخدمة
+
+| التقنية | الوصف |
+|---------|--------|
+| **React.js/Vite** | إطار عمل JavaScript للواجهة الأمامية |
+| **Tailwind CSS** | إطار عمل CSS للتصميم |
+| **shadcn** | مكتبة مكونات UI |
+| **Axios** | مكتبة لطلبات HTTP |
+| **React Icons** | مكتبة الأيقونات |
+| **Lucide React** | مكتبة أيقونات إضافية |
+| **JWT** | نظام المصادقة والأمان |
+
+## فريق العمل
+
+- **عبدالرحمن الطامي**
+- **عائشة عبدالله**
+- **انتصار العتيبي**
+- **طلال المطيري**
+
+## التثبيت والتشغيل
+
+```bash
+# استنساخ المشروع
+git clone [repository-url]
+
+# الانتقال إلى مجلد المشروع
+cd intellicite
+
+# تثبيت التبعيات
+npm install
+
+# تشغيل المشروع
+npm run dev
 ```
