@@ -28,7 +28,7 @@ const crossrefAPI = createAxiosInstance('https://api.crossref.org', 10000);
 const openAlexAPI = createAxiosInstance('https://api.openalex.org', 10000);
 const unpaywallAPI = createAxiosInstance('https://api.unpaywall.org', 8000);
 
-  // exponential backoff utility
+  // backoff utility
 const exponentialBackoff = async (attempt: number, maxAttempts: number = 3): Promise<void> => {
   if (attempt >= maxAttempts) return;
   const delay = Math.min(1000 * Math.pow(2, attempt), 10000); 
@@ -51,8 +51,10 @@ const retryRequest = async <T>(
       // rate limiting
       if (error.response?.status === 429 && !isLastAttempt) {
         console.warn(`${apiName} rate limit hit (429). Retrying after backoff...`);
-        const retryAfter = error.response?.headers?.['retry-after'] || 2;
-        const delay = Math.min(parseInt(retryAfter) * 1000, 5000); 
+        const retryAfter = error.response?.headers?.['retry-after'] || 5;
+        const baseDelay = apiName === 'Semantic Scholar' ? 10000 : 2000; 
+        const delay = Math.max(parseInt(retryAfter) * 1000, baseDelay * (attempt + 1));
+        console.log(`Waiting ${delay/1000}s before retry attempt ${attempt + 1}/${maxRetries}`);
         await new Promise(resolve => setTimeout(resolve, delay));
         continue;
       }
@@ -75,7 +77,7 @@ const retryRequest = async <T>(
       
       // client errors 
       if (isLastAttempt) {
-        console.warn(`${apiName} final error:`, error.message);
+        console.warn(`${apiName} final error: HTTP ${error.response?.status || 'N/A'}: ${error.message}`);
         return null;
       }
     }
@@ -92,6 +94,8 @@ export async function searchSemanticScholar(query: string, count: number = 3) {
   const pageSize = 10;
   const maxPages = 5;
   let pagesTried = 0;
+
+  await new Promise(resolve => setTimeout(resolve, 2000));
 
   while (doiPapers.length < count && pagesTried < maxPages) {
     const result = await retryRequest(async () => {
@@ -138,7 +142,7 @@ export async function searchSemanticScholar(query: string, count: number = 3) {
     pagesTried++;
 
     if (pagesTried < maxPages && doiPapers.length < count) {
-      await new Promise(resolve => setTimeout(resolve, 2000)); 
+      await new Promise(resolve => setTimeout(resolve, 5000)); 
     }
   }
 
@@ -151,6 +155,9 @@ export async function searchSemanticScholar(query: string, count: number = 3) {
 // https://api.semanticscholar.org/graph/v1/paper/DOI:<doi> (<<) an example get request
 
 export async function getFromSemanticScholar(doi: string) {
+  // add delay before individual requests to help with rate limiting
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
   return await retryRequest(async () => {
     const encodedDoi = encodeURIComponent(doi);
     const response = await semanticScholarAPI.get(`/graph/v1/paper/DOI:${encodedDoi}`, {
@@ -164,7 +171,7 @@ export async function getFromSemanticScholar(doi: string) {
     }
     
     return response.data;
-  }, 3, 'Semantic Scholar');
+  }, 4, 'Semantic Scholar'); // increased retries to 4
 }
 
 // these are the APIs used to enrich the paper data
