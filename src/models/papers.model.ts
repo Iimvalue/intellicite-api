@@ -6,6 +6,9 @@ export interface IPaper extends Document {
   authors: string[];
   publicationDate: Date;
   journal: string;
+  volume?: string;
+  issue?: string;
+  pages?: string;
   citationCount: number;
   badges: string[];
   pdfLink: string;
@@ -28,7 +31,6 @@ export interface IPaper extends Document {
   countryCount?: number;
   isRetracted?: boolean;
   hasFulltext?: boolean;
-  meshTerms?: string[];
   topics?: Array<{
     id: string;
     name: string;
@@ -73,6 +75,18 @@ const paperSchema = new Schema<IPaper>({
   },
   journal: {
     type: String,
+  },
+  volume: {
+    type: String,
+    required: false
+  },
+  issue: {
+    type: String,
+    required: false
+  },
+  pages: {
+    type: String,
+    required: false
   },
   citationCount: {
     type: Number,
@@ -161,9 +175,6 @@ const paperSchema = new Schema<IPaper>({
     type: Boolean,
     default: false
   },
-  meshTerms: [{
-    type: String
-  }],
   topics: [{
     id: String,
     name: String,

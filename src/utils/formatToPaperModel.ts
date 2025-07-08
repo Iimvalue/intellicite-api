@@ -17,8 +17,8 @@ function extractAbstract(abstractInvertedIndex: any): string {
   
   words.sort((a, b) => Math.min(...a.positions) - Math.min(...b.positions));
   
-  // first 250 words to avoid long abstracts
-  return words.slice(0, 250).map(w => w.word).join(' ');
+  // first 350 words to avoid long abstracts
+  return words.slice(0, 350).map(w => w.word).join(' ');
 }
 
 export function formatToPaperModel(
@@ -64,8 +64,7 @@ export function formatToPaperModel(
     awardId: grant.award_id || ''
   })) || [];
 
-  //  MeSH terms
-  const meshTerms = oa?.mesh?.map((mesh: any) => mesh.descriptor_name).filter(Boolean) || [];
+  
 
   //  keywords from OpenAlex
   const keywords = oa?.keywords?.map((kw: any) => kw.display_name).filter(Boolean) || [];
@@ -81,6 +80,12 @@ export function formatToPaperModel(
   const publisher = oa?.primary_location?.source?.host_organization_name || 
                    cr?.publisher || 'Unknown';
 
+  const volume = cr?.volume || oa?.biblio?.volume || '';
+  const issue = cr?.issue || oa?.biblio?.issue || '';
+  const pages = cr?.page || oa?.biblio?.first_page ? 
+    (oa?.biblio?.last_page ? `${oa.biblio.first_page}-${oa.biblio.last_page}` : oa.biblio.first_page) : 
+    '';
+
   return {
     doi,
     title: cr?.title?.[0] ?? oa?.display_name ?? 'Untitled',
@@ -91,6 +96,9 @@ export function formatToPaperModel(
       cr?.containerTitle?.[0] ??
       oa?.host_venue?.display_name ??
       'Unknown',
+    volume,
+    issue,
+    pages,
     citationCount: oa?.cited_by_count ?? 0,
     badges,
     pdfLink: uw?.best_oa_location?.url_for_pdf ?? '',
@@ -114,7 +122,7 @@ export function formatToPaperModel(
     countryCount: oa?.countries_distinct_count || 0,    
     isRetracted: oa?.is_retracted || false,
     hasFulltext: oa?.has_fulltext || false,
-    meshTerms,    
+      
     topics,    
     funders,    
     venueType,
